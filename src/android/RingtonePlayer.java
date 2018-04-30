@@ -21,12 +21,8 @@ public class RingtonePlayer extends CordovaPlugin {
 
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         Context context = this.cordova.getActivity().getApplicationContext();
-        Uri uri;
-
-        uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-        if (mRingtone == null) {
-            mRingtone = RingtoneManager.getRingtone(context, uri);
-        }
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+        mRingtone = RingtoneManager.getRingtone(context, uri);
 
         if (action.equals("play")) {
             play();
