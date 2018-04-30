@@ -15,26 +15,32 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class RingtonePlayer extends CordovaPlugin {
-    private static final String TAG = "Ringtone";
-    private Ringtone mRingtone = null;
+    private static final String TAG = "RingtonePlayer";
+    private static Ringtone mRingtone = null;
     private Timer mTimer = null;
 
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         Context context = this.cordova.getActivity().getApplicationContext();
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-        mRingtone = RingtoneManager.getRingtone(context, uri);
+        if (mRingtone == null) {
+            mRingtone = RingtoneManager.getRingtone(context, uri);
+        }
 
         if (action.equals("play")) {
             play();
+            callbackContext.success();
         } else if (action.equals("stop")) {
             stop();
+            callbackContext.success();
+        } else {
+            callbackContext.error("Invalid action =" + action);
+            return false;
         }
-
         return true;
     }
 
     private void play() {
-        if (mRingtone.isPlaying()) {
+        if (mRingtone == null || mRingtone.isPlaying()) {
             return;
         }
         mTimer = new Timer();
@@ -49,11 +55,13 @@ public class RingtonePlayer extends CordovaPlugin {
     }
 
     private void stop() {
+        Log.d(TAG, "[stop]");
         if (mTimer != null) {
             mTimer.cancel();
         }
-        if (mRingtone.isPlaying()) {
+        if (mRingtone != null) {
             mRingtone.stop();
+            mRingtone = null;
         }
     }
 }

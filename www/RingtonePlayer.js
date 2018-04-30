@@ -16,6 +16,6 @@ exports.play = function (success, error) {
  * @param success {Function}
  * @param error {Function}
  */
-exports.stop = function (arg0, success, error) {
+exports.stop = function (success, error) {
   exec(success, error, 'RingtonePlayer', 'stop', [])
 }
